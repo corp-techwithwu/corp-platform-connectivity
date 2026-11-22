@@ -20,7 +20,7 @@ jobs:
   create-storage:
     name: 'Ensure Terraform Storage Backend'
     runs-on: ubuntu-latest
-    environment: ${{ inputs.env }}
+    environment: ${{ inputs.env }} == "prod" ? prod-plan : ${{ inputs.env }}
 
     steps:
       - name: 'Checkout Repository'
