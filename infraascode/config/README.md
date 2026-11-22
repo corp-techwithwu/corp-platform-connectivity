@@ -48,7 +48,7 @@ When a Spoke VNet is created in its dedicated subscription repository:
 | :--- | :--- | :--- | :--- |
 | `spoke_name` | string | (required) | Unique identifier for the spoke (used in Terraform resource keys and peering name). |
 | `remote_virtual_network_id` | string | (required) | Full Azure Resource ID of the target Spoke VNet. |
-| `hub_vnet_key` | string | `"primary"` | Target Hub VNet key defined in `local.config.tf` (e.g. `primary`, `secondary`). Defaults to the first Hub VNet if omitted. |
+| `hub_vnet_key` | string | `"primary"` | Target Hub VNet key defined in `locals-hubvnet.tf` (e.g. `primary`, `secondary`). Defaults to the first Hub VNet if omitted. |
 | `allow_forwarded_traffic` | boolean | `true` | Allows forwarded traffic from outside the Hub VNet to be accepted by the peering. |
 | `allow_gateway_transit` | boolean | `false` | Specifies whether the Hub gateway can be used by the remote VNet. |
 | `use_remote_gateways` | boolean | `false` | Specifies whether the Hub will use remote gateways in the spoke. |
