@@ -28,7 +28,7 @@ jobs:
   terraform-test-and-plan:
     name: 'Terraform Test & Plan'
     runs-on: ubuntu-latest
-    environment: ${{ vars.TF_ENV }}-ro
+    environment: prod-ro
     defaults:
       run:
         working-directory: infraascode
@@ -124,7 +124,7 @@ jobs:
     # Apply only triggers on direct push or manual dispatch on main branch
     if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-latest
-    environment: ${{ vars.TF_ENV }}
+    environment: prod
     defaults:
       run:
         working-directory: infraascode
