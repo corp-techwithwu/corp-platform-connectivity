@@ -13,14 +13,28 @@ on:
           - prod
 
 permissions:
-  id-token: write  # Required for Azure OIDC Login
+  id-token: write
   contents: read
 
 jobs:
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      environment: ${{ steps.map.outputs.environment }}
+    steps:
+      - id: map
+        run: |
+          if [ "${{ inputs.env }}" = "prod" ]; then
+            echo "environment=prod-plan" >> "$GITHUB_OUTPUT"
+          else
+            echo "environment=${{ inputs.env }}" >> "$GITHUB_OUTPUT"
+          fi
+
   create-storage:
     name: 'Ensure Terraform Storage Backend'
     runs-on: ubuntu-latest
-    environment: ${{ inputs.env }} == "prod" ? prod-plan : ${{ inputs.env }}
+    needs: setup
+    environment: ${{ needs.setup.outputs.environment }}
 
     steps:
       - name: 'Checkout Repository'
@@ -59,7 +73,6 @@ jobs:
               fi
             done < "$HCL_FILE"
 
-            # Azure region for state resources (defaulting to centralus)
             STATE_LOCATION="centralus"
 
             echo "Executing storage provisioning script..."
