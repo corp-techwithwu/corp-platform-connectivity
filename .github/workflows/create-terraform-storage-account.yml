@@ -17,24 +17,10 @@ permissions:
   contents: read
 
 jobs:
-  setup:
-    runs-on: ubuntu-latest
-    outputs:
-      environment: ${{ steps.map.outputs.environment }}
-    steps:
-      - id: map
-        run: |
-          if [ "${{ inputs.env }}" = "prod" ]; then
-            echo "environment=prod-plan" >> "$GITHUB_OUTPUT"
-          else
-            echo "environment=${{ inputs.env }}" >> "$GITHUB_OUTPUT"
-          fi
-
   create-storage:
     name: 'Ensure Terraform Storage Backend'
     runs-on: ubuntu-latest
-    needs: setup
-    environment: ${{ needs.setup.outputs.environment }}
+    environment: ${{ inputs.env }}
 
     steps:
       - name: 'Checkout Repository'
