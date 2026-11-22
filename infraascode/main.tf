@@ -1,6 +1,6 @@
 ###############################################################################
 # Centralized Connectivity Hub
-# Manages Hub VNets (defined in local.config.tf) and Spoke Peering connections
+# Manages Hub VNets (defined in locals-hubvnet.tf) and Spoke Peering connections
 ###############################################################################
 
 ###############################################################################
@@ -28,7 +28,7 @@ module "resource_group" {
 
 ###############################################################################
 # HUB – AVM Virtual Network Module (Extendable)
-# Provisions all Hub Virtual Networks and custom subnets from local.config.tf
+# Provisions all Hub Virtual Networks and custom subnets from locals-hubvnet.tf
 ###############################################################################
 module "hub_vnet" {
   for_each = local.hub_vnets

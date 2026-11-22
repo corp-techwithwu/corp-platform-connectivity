@@ -9,9 +9,9 @@ This repository provisions and manages the centralized **Connectivity Hub** for 
 
 ## Key Design Principles
 
-1. **Extendable Hub VNets via `local.config.tf`**:
-   - Centralizes the definition of all Hub Virtual Networks in a dedicated configuration file (`local.config.tf`).
-   - Adding a new Hub VNet (e.g. secondary region, management hub, transit hub) is as simple as adding an entry to the `hub_vnets` map in `local.config.tf`.
+1. **Extendable Hub VNets via `locals-hubvnet.tf`**:
+   - Centralizes the definition of all Hub Virtual Networks in a dedicated configuration file (`locals-hubvnet.tf`).
+   - Adding a new Hub VNet (e.g. secondary region, management hub, transit hub) is as simple as adding an entry to the `hub_vnets` map in `locals-hubvnet.tf`.
    - **Custom Subnets per Hub**: Each Hub VNet configures its own unique subnets, address prefixes, and names independently.
 2. **Dynamic Spoke Peering via `config/spoke_vnets.csv`**:
    - Spoke virtual networks reside in separate individual subscriptions and application repositories.
@@ -23,9 +23,9 @@ This repository provisions and manages the centralized **Connectivity Hub** for 
 
 ---
 
-## 1. How to Add or Modify Hub VNets (`local.config.tf`)
+## 1. How to Add or Modify Hub VNets (`locals-hubvnet.tf`)
 
-Open `infraascode/local.config.tf` to customize existing Hub VNets or add new ones:
+Open `infraascode/locals-hubvnet.tf` to customize existing Hub VNets or add new ones:
 
 ```hcl
 locals {
@@ -117,7 +117,7 @@ infraascode/
 │       └── version.tf              # Provider constraints for peering module
 ├── .checkov.yaml                   # Policy-as-code and static analysis rules
 ├── data.tf                         # Client configurations and data sources
-├── local.config.tf                 # EXTENDABLE: Central definition of Hub VNets & subnets
+├── locals-hubvnet.tf                 # EXTENDABLE: Central definition of Hub VNets & subnets
 ├── locals.tf                       # Local computations, tagging, and CSV parser
 ├── main.tf                         # Root orchestration & hub loop
 ├── outputs.tf                      # Hub VNet IDs, details, and peered spokes
