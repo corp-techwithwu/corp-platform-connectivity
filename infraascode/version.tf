@@ -1,9 +1,9 @@
 terraform {
   required_version = ">= 1.9, < 2.0"
 
-  # backend "azurerm" {
-  #   use_oidc = true
-  # }
+  backend "azurerm" {
+    use_oidc = true
+  }
 
   required_providers {
     azurerm = {
