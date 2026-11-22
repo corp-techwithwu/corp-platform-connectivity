@@ -1,3 +1,4 @@
-environment                 = "prod"
-management_resource_group   = "rg-corp-platform-management"
-log_analytics_workspace_sku = "Free"
+environment      = "prod"
+location         = "centralus"
+enable_telemetry = false
+hub_vnet_name    = "vnet-platform-connectivity-prod"

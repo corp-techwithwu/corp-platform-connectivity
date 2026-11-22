@@ -1,33 +1,31 @@
 ###############################################################################
-# Outputs
+# Outputs - Connectivity Hub
 ###############################################################################
 
 output "resource_group_id" {
-  description = "The ID of the management resource group."
-  value       = azurerm_resource_group.management.id
+  description = "The Resource ID of the Connectivity Hub resource group."
+  value       = module.resource_group.resource_id
 }
 
 output "resource_group_name" {
-  description = "The name of the management resource group."
-  value       = azurerm_resource_group.management.name
+  description = "The name of the Connectivity Hub resource group."
+  value       = local.rg_name
 }
 
-output "resource_group_location" {
-  description = "The Azure region of the management resource group."
-  value       = azurerm_resource_group.management.location
+output "hub_vnets" {
+  description = "Map of all provisioned Hub Virtual Networks with IDs and details."
+  value = {
+    for k, v in module.hub_vnet : k => {
+      id            = v.resource_id
+      name          = local.hub_vnets[k].name
+      location      = try(local.hub_vnets[k].location, local.location)
+      address_space = local.hub_vnets[k].address_space
+      subnets       = v.subnets
+    }
+  }
 }
 
-output "log_analytics_workspace_sku" {
-  description = "The SKU applied to the Log Analytics Workspace (Free for non-prod, PerGB2018 for prod)."
-  value       = lower(var.environment) == "prod" || lower(var.environment) == "production" ? "PerGB2018" : (var.log_analytics_workspace_sku != null && var.log_analytics_workspace_sku != "" ? var.log_analytics_workspace_sku : "Free")
-}
-
-output "log_analytics_workspace_name" {
-  description = "The name of the Log Analytics Workspace."
-  value       = var.log_analytics_workspace_name
-}
-
-output "automation_account_name" {
-  description = "The name of the Azure Automation account."
-  value       = var.automation_account_name
+output "peered_spoke_vnets" {
+  description = "List of spoke virtual network names currently configured for Hub-side peering."
+  value       = module.spoke_peering.peered_spoke_names
 }
