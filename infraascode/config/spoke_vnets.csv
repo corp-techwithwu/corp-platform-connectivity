@@ -1,2 +1,2 @@
 spoke_name,remote_virtual_network_id,hub_vnet_key,allow_forwarded_traffic,allow_gateway_transit,use_remote_gateways,allow_virtual_network_access
-vnet-spoke,/subscriptions/34ba0e48-d670-4185-9415-b76e14524ff9/resourceGroups/rg-spoke/providers/Microsoft.Network/virtualNetworks/vnet-spoke,primary,true,false,false,true
+#vnet-spoke,/subscriptions/34ba0e48-d670-4185-9415-b76e14524ff9/resourceGroups/rg-spoke/providers/Microsoft.Network/virtualNetworks/vnet-spoke,primary,true,false,false,true
