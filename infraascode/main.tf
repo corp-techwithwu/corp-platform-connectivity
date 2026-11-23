@@ -3,15 +3,6 @@
 # Manages Hub VNets (defined in locals-hubvnet.tf) and Spoke Peering connections
 ###############################################################################
 
-###############################################################################
-# Suffix Generator
-###############################################################################
-resource "random_string" "suffix" {
-  length  = 4
-  numeric = true
-  special = false
-  upper   = false
-}
 
 ###############################################################################
 # Resource Group (AVM Resource Module)
