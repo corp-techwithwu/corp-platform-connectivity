@@ -54,3 +54,24 @@ variable "custom_tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "hub_vpn_configs" {
+  description = "Map of VPN configurations keyed by Hub VNet key (e.g., primary)."
+  type = map(object({
+    enabled    = optional(bool, false)
+    name       = optional(string)
+    sku        = optional(string, "VpnGw1")
+    vpn_type   = optional(string, "RouteBased")
+    generation = optional(string, "Generation2")
+    enable_bgp = optional(bool, false)
+    sites = optional(map(object({
+      gateway_address = string
+      address_space   = list(string)
+      shared_key      = string
+      connection_type = optional(string, "IPsec")
+      routing_weight  = optional(number, 0)
+    })), {})
+  }))
+  default   = {}
+  sensitive = true
+}

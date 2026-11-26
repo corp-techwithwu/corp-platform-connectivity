@@ -58,3 +58,26 @@ module "spoke_peering" {
 
   spoke_peers = local.spoke_peers
 }
+
+
+###############################################################################
+# VPN Gateway Submodule
+###############################################################################
+module "vpn" {
+  count  = var.vpn.enabled ? 1 : 0
+  source = "./modules/vpn"
+
+  name                = var.vpn.name
+  location            = local.location
+  resource_group_name = module.resource_group.name
+  gateway_subnet_id   = module.hub_vnet["primary"].subnets["GatewaySubnet"].resource_id
+
+  sku        = var.vpn.sku
+  vpn_type   = var.vpn.vpn_type
+  generation = var.vpn.generation
+  enable_bgp = var.vpn.enable_bgp
+
+  local_network_gateways = var.vpn.sites
+
+  tags = local.common_tags
+}
