@@ -60,17 +60,18 @@ variable "hub_vpn_configs" {
   type = map(object({
     enabled    = optional(bool, false)
     name       = optional(string)
-    sku        = optional(string, "VpnGw1")
+    sku        = optional(string, "VpnGw1AZ")
     vpn_type   = optional(string, "RouteBased")
-    generation = optional(string, "Generation2")
+    generation = optional(string, "Generation1")
     enable_bgp = optional(bool, false)
-    sites = optional(map(object({
+    sites = optional(list(object({
+      name            = string
       gateway_address = string
       address_space   = list(string)
       shared_key      = string
       connection_type = optional(string, "IPsec")
       routing_weight  = optional(number, 0)
-    })), {})
+    })), [])
   }))
   default   = {}
   sensitive = true

@@ -19,17 +19,6 @@ locals {
           address_prefixes = ["10.0.254.0/24"]
         }
       }
-
-      # Basic per-hub VPN configuration (overridden/populated via var.hub_vpn_configs)
-      vpn = lookup(var.hub_vpn_configs, "primary", {
-        enabled    = false
-        name       = "vgw-${var.hub_vnet_name}"
-        sku        = "VpnGw1"
-        vpn_type   = "RouteBased"
-        generation = "Generation2"
-        enable_bgp = false
-        sites      = {}
-      })
     }
   }
 }

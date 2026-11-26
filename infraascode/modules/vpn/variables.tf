@@ -19,9 +19,9 @@ variable "gateway_subnet_id" {
 }
 
 variable "sku" {
-  description = "SKU of the VPN Gateway (e.g., VpnGw1, VpnGw2, VpnGw1AZ)."
+  description = "SKU of the VPN Gateway. VpnGw1AZ is the lowest tier recommended for new deployments."
   type        = string
-  default     = "VpnGw1"
+  default     = "VpnGw1AZ"
 }
 
 variable "vpn_type" {
@@ -33,7 +33,7 @@ variable "vpn_type" {
 variable "generation" {
   description = "Generation of the VPN Gateway (Generation1 or Generation2)."
   type        = string
-  default     = "Generation2"
+  default     = "Generation1"
 }
 
 variable "enable_bgp" {
@@ -43,15 +43,16 @@ variable "enable_bgp" {
 }
 
 variable "local_network_gateways" {
-  description = "Map of on-premises / remote VPN site configurations and Site-to-Site connections."
-  type = map(object({
+  description = "List of on-premises / remote VPN site configurations and Site-to-Site connections."
+  type = list(object({
+    name            = string
     gateway_address = string
     address_space   = list(string)
     shared_key      = string
     connection_type = optional(string, "IPsec")
     routing_weight  = optional(number, 0)
   }))
-  default   = {}
+  default   = []
   sensitive = true
 }
 

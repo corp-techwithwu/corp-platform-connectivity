@@ -64,20 +64,23 @@ module "spoke_peering" {
 # VPN Gateway Submodule
 ###############################################################################
 module "vpn" {
-  count  = var.vpn.enabled ? 1 : 0
+  for_each = toset(nonsensitive([
+    for key, config in var.hub_vpn_configs : key
+    if config.enabled
+  ]))
   source = "./modules/vpn"
 
-  name                = var.vpn.name
+  name                = coalesce(var.hub_vpn_configs[each.key].name, "vgw-${local.hub_vnets[each.key].name}")
   location            = local.location
   resource_group_name = module.resource_group.name
-  gateway_subnet_id   = module.hub_vnet["primary"].subnets["GatewaySubnet"].resource_id
+  gateway_subnet_id   = module.hub_vnet[each.key].subnets["gateway"].resource_id
 
-  sku        = var.vpn.sku
-  vpn_type   = var.vpn.vpn_type
-  generation = var.vpn.generation
-  enable_bgp = var.vpn.enable_bgp
+  sku        = var.hub_vpn_configs[each.key].sku
+  vpn_type   = var.hub_vpn_configs[each.key].vpn_type
+  generation = var.hub_vpn_configs[each.key].generation
+  enable_bgp = var.hub_vpn_configs[each.key].enable_bgp
 
-  local_network_gateways = var.vpn.sites
+  local_network_gateways = var.hub_vpn_configs[each.key].sites
 
   tags = local.common_tags
 }
