@@ -81,6 +81,7 @@ module "vpn" {
   enable_bgp = var.hub_vpn_configs[each.key].enable_bgp
 
   local_network_gateways = var.hub_vpn_configs[each.key].sites
+  p2s                    = var.hub_vpn_configs[each.key].p2s
 
   tags = local.common_tags
 }

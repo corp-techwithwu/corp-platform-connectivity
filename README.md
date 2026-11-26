@@ -84,6 +84,8 @@ VPN gateways are created only for hubs enabled in `hub_vpn_configs`. The map key
 
 Both `infraascode/env/dev/terraform.tfvars` and `infraascode/env/prod/terraform.tfvars` enable a gateway and set `sites = []`. This creates the VPN gateway without any local network gateways or site-to-site connections. Add site objects to `sites` only when connecting remote sites; each object requires a unique `name`, `gateway_address`, `address_space`, and `shared_key`.
 
+The same environment files enable Point-to-Site (P2S) access using Microsoft Entra ID. This uses the OpenVPN protocol and the tenant ID in `aad_tenant_id`; select a private `address_space` that does not overlap your VNets or networks clients connect from. The configured `VpnGw1AZ` route-based gateway supports this authentication method. Users connect with the Azure VPN Client.
+
 ```hcl
 hub_vpn_configs = {
   primary = {

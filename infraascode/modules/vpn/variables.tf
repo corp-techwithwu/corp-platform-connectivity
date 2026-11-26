@@ -56,6 +56,19 @@ variable "local_network_gateways" {
   sensitive = true
 }
 
+variable "p2s" {
+  description = "Optional Point-to-Site (P2S) VPN configuration using Microsoft Entra ID (no root certificate required)."
+  type = object({
+    enabled       = optional(bool, false)
+    address_space = list(string)
+    aad_tenant_id = string
+    aad_audience  = optional(string, "c632b3df-fb67-4d84-bdcf-b95ad541b5c8")
+    aad_issuer    = optional(string)
+    protocols     = optional(list(string), ["OpenVPN"])
+  })
+  default = null
+}
+
 variable "tags" {
   description = "Tags to apply to VPN resources."
   type        = map(string)

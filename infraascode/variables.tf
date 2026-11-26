@@ -72,6 +72,14 @@ variable "hub_vpn_configs" {
       connection_type = optional(string, "IPsec")
       routing_weight  = optional(number, 0)
     })), [])
+    p2s = optional(object({
+      enabled       = optional(bool, false)
+      address_space = list(string)
+      aad_tenant_id = string
+      aad_audience  = optional(string, "c632b3df-fb67-4d84-bdcf-b95ad541b5c8")
+      aad_issuer    = optional(string)
+      protocols     = optional(list(string), ["OpenVPN"])
+    }))
   }))
   default   = {}
   sensitive = true
