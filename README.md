@@ -46,6 +46,10 @@ locals {
           name             = "snet-shared-services"
           address_prefixes = ["10.0.2.0/24"]
         }
+        gateway = {
+          name             = "GatewaySubnet"
+          address_prefixes = ["10.0.254.0/24"]
+        }
       }
     }
 
@@ -74,7 +78,26 @@ Terraform automatically iterates over `local.hub_vnets` via `for_each` in `main.
 
 ---
 
-## 2. How to Register a Spoke VNet (`config/spoke_vnets.csv`)
+## 2. Configure a VPN Gateway for a Hub
+
+VPN gateways are created only for hubs enabled in `hub_vpn_configs`. The map key must match a key in `hub_vnets` in `infraascode/locals-hubvnet.tf`. The environment tfvars files control each gateway's SKU; `VpnGw1AZ` is the lowest tier documented for new deployments. The `GatewaySubnet` is required in each hub that has VPN enabled.
+
+Both `infraascode/env/dev/terraform.tfvars` and `infraascode/env/prod/terraform.tfvars` enable a gateway and set `sites = []`. This creates the VPN gateway without any local network gateways or site-to-site connections. Add site objects to `sites` only when connecting remote sites; each object requires a unique `name`, `gateway_address`, `address_space`, and `shared_key`.
+
+```hcl
+hub_vpn_configs = {
+  primary = {
+    enabled    = true
+    sku        = "VpnGw1AZ"
+    generation = "Generation1"
+    sites      = []
+  }
+}
+```
+
+---
+
+## 3. How to Register a Spoke VNet (`config/spoke_vnets.csv`)
 
 When a new Spoke VNet is deployed in another subscription repository:
 
@@ -110,14 +133,18 @@ infraascode/
 │       ├── backend.hcl             # Remote state backend configuration for Prod
 │       └── terraform.tfvars        # Environment input variables for Prod
 ├── modules/
-│   └── spoke_peering/              # Submodule for managing Hub-side VNet peerings
-│       ├── main.tf                 # Native azurerm_virtual_network_peering resource
-│       ├── outputs.tf              # Peering IDs and spoke names outputs
-│       ├── variables.tf            # Submodule inputs (hub map & spoke map)
-│       └── version.tf              # Provider constraints for peering module
+│   ├── spoke_peering/              # Submodule for managing Hub-side VNet peerings
+│   │   ├── main.tf                 # Native azurerm_virtual_network_peering resource
+│   │   ├── outputs.tf              # Peering IDs and spoke names outputs
+│   │   ├── variables.tf            # Submodule inputs (hub map & spoke map)
+│   │   └── version.tf              # Provider constraints for peering module
+│   └── vpn/                        # VPN gateway and optional site-to-site resources
+│       ├── main.tf
+│       ├── outputs.tf
+│       └── variables.tf
 ├── .checkov.yaml                   # Policy-as-code and static analysis rules
 ├── data.tf                         # Client configurations and data sources
-├── locals-hubvnet.tf                 # EXTENDABLE: Central definition of Hub VNets & subnets
+├── locals-hubvnet.tf               # EXTENDABLE: Central definition of Hub VNets & subnets
 ├── locals.tf                       # Local computations, tagging, and CSV parser
 ├── main.tf                         # Root orchestration & hub loop
 ├── outputs.tf                      # Hub VNet IDs, details, and peered spokes

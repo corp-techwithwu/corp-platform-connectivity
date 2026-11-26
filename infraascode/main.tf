@@ -58,3 +58,29 @@ module "spoke_peering" {
 
   spoke_peers = local.spoke_peers
 }
+
+
+###############################################################################
+# VPN Gateway Submodule
+###############################################################################
+module "vpn" {
+  for_each = toset(nonsensitive([
+    for key, config in var.hub_vpn_configs : key
+    if config.enabled
+  ]))
+  source = "./modules/vpn"
+
+  name                = coalesce(var.hub_vpn_configs[each.key].name, "vgw-${local.hub_vnets[each.key].name}")
+  location            = local.location
+  resource_group_name = module.resource_group.name
+  gateway_subnet_id   = module.hub_vnet[each.key].subnets["gateway"].resource_id
+
+  sku        = var.hub_vpn_configs[each.key].sku
+  vpn_type   = var.hub_vpn_configs[each.key].vpn_type
+  generation = var.hub_vpn_configs[each.key].generation
+  enable_bgp = var.hub_vpn_configs[each.key].enable_bgp
+
+  local_network_gateways = var.hub_vpn_configs[each.key].sites
+
+  tags = local.common_tags
+}
