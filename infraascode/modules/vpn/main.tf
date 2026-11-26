@@ -35,6 +35,23 @@ resource "azurerm_virtual_network_gateway" "vpn" {
     subnet_id                     = var.gateway_subnet_id
   }
 
+  dynamic "vpn_client_configuration" {
+    for_each = var.p2s != null && var.p2s.enabled ? [var.p2s] : []
+
+    content {
+      address_space        = vpn_client_configuration.value.address_space
+      vpn_auth_types       = ["AAD"]
+      vpn_client_protocols = vpn_client_configuration.value.protocols
+
+      aad_tenant   = "https://login.microsoftonline.com/${vpn_client_configuration.value.aad_tenant_id}"
+      aad_audience = vpn_client_configuration.value.aad_audience
+      aad_issuer = coalesce(
+        vpn_client_configuration.value.aad_issuer,
+        "https://sts.windows.net/${vpn_client_configuration.value.aad_tenant_id}/"
+      )
+    }
+  }
+
   tags = var.tags
 }
 
