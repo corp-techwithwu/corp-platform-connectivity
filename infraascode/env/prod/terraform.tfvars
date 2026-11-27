@@ -5,7 +5,7 @@ hub_vnet_name    = "vnet-platform-connectivity-prod"
 
 hub_vpn_configs = {
   primary = {
-    enabled    = true
+    enabled    = false
     name       = "vgw-hub-prod-002"
     sku        = "VpnGw1AZ"
     vpn_type   = "RouteBased"
@@ -14,7 +14,7 @@ hub_vpn_configs = {
 
     sites = []
     p2s = {
-      enabled       = true
+      enabled       = false
       address_space = ["172.16.201.0/24"]
       aad_tenant_id = "da528e4a-a122-4392-b5c8-370e74e0236d"
       protocols     = ["OpenVPN"]
