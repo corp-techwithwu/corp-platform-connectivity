@@ -8,7 +8,7 @@ locals {
 }
 
 resource "azurerm_public_ip" "vpn" {
-  name                = "pip-${var.name}"
+  name                = "pip-${var.name}-new02"
   location            = var.location
   resource_group_name = var.resource_group_name
   allocation_method   = "Static"
