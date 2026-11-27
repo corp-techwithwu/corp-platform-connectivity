@@ -12,6 +12,16 @@ output "resource_group_name" {
   value       = local.rg_name
 }
 
+output "dns_resource_group_id" {
+  description = "The Resource ID of the DNS resource group."
+  value       = module.dns_resource_group.resource_id
+}
+
+output "dns_resource_group_name" {
+  description = "The name of the DNS resource group."
+  value       = module.dns_resource_group.name
+}
+
 output "hub_vnets" {
   description = "Map of all provisioned Hub Virtual Networks with IDs and details."
   value = {

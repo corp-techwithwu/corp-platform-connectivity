@@ -4,8 +4,9 @@
 
 locals {
   # Location and naming
-  location = var.location
-  rg_name  = var.resource_group_name != "" ? var.resource_group_name : "rg-connectivity-hub-${var.environment}"
+  location    = var.location
+  rg_name     = var.resource_group_name != "" ? var.resource_group_name : "rg-connectivity-hub-${var.environment}"
+  dns_rg_name = var.dns_resource_group_name != "" ? var.dns_resource_group_name : "rg-connectivity-dns-${lower(var.environment)}-${replace(lower(local.location), " ", "")}-001"
 
   # Centralized tagging
   common_tags = merge(

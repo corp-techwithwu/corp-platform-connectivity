@@ -49,6 +49,12 @@ variable "resource_group_name" {
   default     = ""
 }
 
+variable "dns_resource_group_name" {
+  description = "Custom name for the resource group hosting DNS resources. If omitted, a name is generated from the workload, environment, region, and instance."
+  type        = string
+  default     = ""
+}
+
 variable "custom_tags" {
   description = "Additional tags to apply to all resources."
   type        = map(string)

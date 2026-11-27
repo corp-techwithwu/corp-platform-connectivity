@@ -18,6 +18,19 @@ module "resource_group" {
 }
 
 ###############################################################################
+# DNS Resource Group (AVM Resource Module)
+###############################################################################
+module "dns_resource_group" {
+  source  = "Azure/avm-res-resources-resourcegroup/azurerm"
+  version = "0.5.0"
+
+  name             = local.dns_rg_name
+  location         = local.location
+  enable_telemetry = var.enable_telemetry
+  tags             = local.common_tags
+}
+
+###############################################################################
 # HUB – AVM Virtual Network Module (Extendable)
 # Provisions all Hub Virtual Networks and custom subnets from locals-hubvnet.tf
 ###############################################################################
@@ -98,7 +111,7 @@ module "dns_resolver" {
 
   name                = coalesce(var.hub_dns_resolver_configs[each.key].name, "dnspr-${local.hub_vnets[each.key].name}")
   location            = local.location
-  resource_group_name = module.resource_group.name
+  resource_group_name = module.dns_resource_group.name
   virtual_network_id  = module.hub_vnet[each.key].resource_id
 
   inbound_endpoint_name                = var.hub_dns_resolver_configs[each.key].inbound_endpoint_name
@@ -106,7 +119,23 @@ module "dns_resolver" {
   inbound_private_ip_allocation_method = var.hub_dns_resolver_configs[each.key].inbound_private_ip_allocation_method
   inbound_private_ip_address           = var.hub_dns_resolver_configs[each.key].inbound_private_ip_address
 
-  private_dns_zones = local.private_dns_zones
+  tags = local.common_tags
+}
+
+###############################################################################
+# Private DNS Zone Submodule
+###############################################################################
+module "private_dns_zone" {
+  source = "./modules/private_dns_zone"
+
+  resource_group_name = module.dns_resource_group.name
+  private_dns_zones   = local.private_dns_zones
+  virtual_networks = {
+    for key, resolver in module.dns_resolver : key => {
+      name = resolver.name
+      id   = module.hub_vnet[key].resource_id
+    }
+  }
 
   tags = local.common_tags
 }

@@ -4,6 +4,8 @@ This repository provisions and manages the centralized **Connectivity Hub** for 
 - **Resource Group**: `Azure/avm-res-resources-resourcegroup/azurerm`
 - **Virtual Network Module**: `Azure/avm-res-network-virtualnetwork/azurerm`
 - **Native Peering Submodule**: `./modules/spoke_peering` (powered by `azurerm_virtual_network_peering`)
+- **Private DNS Zone Submodule**: `./modules/private_dns_zone` (creates zones and links them to DNS resolver VNets)
+- **DNS Resource Group**: Dedicated group for Private DNS Zones and DNS Private Resolvers, named `rg-connectivity-dns-<environment>-<region>-001` by default; override it with `dns_resource_group_name`.
 
 ---
 
@@ -135,6 +137,8 @@ infraascode/
 │       ├── backend.hcl             # Remote state backend configuration for Prod
 │       └── terraform.tfvars        # Environment input variables for Prod
 ├── modules/
+│   ├── dns_resolver/               # DNS Private Resolver and inbound endpoint
+│   ├── private_dns_zone/           # Private DNS Zones and resolver VNet links
 │   ├── spoke_peering/              # Submodule for managing Hub-side VNet peerings
 │   │   ├── main.tf                 # Native azurerm_virtual_network_peering resource
 │   │   ├── outputs.tf              # Peering IDs and spoke names outputs
@@ -200,5 +204,7 @@ terraform apply -var-file=env/prod/terraform.tfvars
 | :--- | :--- |
 | `resource_group_id` | Resource ID of the Connectivity Hub resource group. |
 | `resource_group_name` | Name of the Connectivity Hub resource group. |
+| `dns_resource_group_id` | Resource ID of the dedicated DNS resource group. |
+| `dns_resource_group_name` | Name of the dedicated DNS resource group. |
 | `hub_vnets` | Map of all provisioned Hub VNets with their IDs, names, locations, and subnets. |
 | `peered_spoke_vnets` | List of active spoke VNets configured for Hub-side peering. |
