@@ -51,3 +51,9 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "private_dns_zones" {
+  description = "Set of Private DNS Zone names to link to the Resolver's Virtual Network."
+  type        = set(string)
+  default     = []
+}

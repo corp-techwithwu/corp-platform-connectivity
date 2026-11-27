@@ -39,4 +39,30 @@ locals {
     && !startswith(trimspace(lookup(row, "spoke_name", "")), "#")
     && !can(regex("(?i)example|placeholder|<.*>", lookup(row, "remote_virtual_network_id", "")))
   }
+
+  private_dns_zones = toset([
+    # App Service / Web App
+    "privatelink.azurewebsites.net",
+
+    # Key Vault
+    "privatelink.vaultcore.azure.net",
+
+    # Storage (keep only the sub-resources you use, e.g., blob, file, dfs, queue, table)
+    "privatelink.blob.core.windows.net",
+    "privatelink.file.core.windows.net",
+
+    # Database (specify the database engines you use, e.g., PostgreSQL, MySQL, SQL)
+    "privatelink.postgres.database.azure.com",
+    "privatelink.mysql.database.azure.com",
+    "privatelink.database.windows.net",
+
+    # AKS (private cluster API server zones usually include the region, e.g., privatelink.eastus.azmk8s.io)
+    # "privatelink.<region>.azmk8s.io",
+
+    # ACI (Azure Container Instances typically use privatelink.<region>.azurecontainer.io)
+    # "privatelink.<region>.azurecontainer.io",
+
+    # VM / virtual machine related services (VMs typically use auto-registration or custom DNS;
+    # for Backup, Recovery Services, Bastion, Disk Access, etc., add the exact zone names)
+  ])
 }

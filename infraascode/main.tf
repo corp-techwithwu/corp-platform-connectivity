@@ -106,5 +106,7 @@ module "dns_resolver" {
   inbound_private_ip_allocation_method = var.hub_dns_resolver_configs[each.key].inbound_private_ip_allocation_method
   inbound_private_ip_address           = var.hub_dns_resolver_configs[each.key].inbound_private_ip_address
 
+  private_dns_zones = local.private_dns_zones
+
   tags = local.common_tags
 }
