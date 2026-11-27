@@ -43,6 +43,7 @@ module "hub_vnet" {
   name          = each.value.name
   location      = try(each.value.location, local.location)
   address_space = each.value.address_space
+  dns_servers   = try(compact([var.hub_dns_resolver_configs[each.key].inbound_private_ip_address]), [])
 
   # Pass the RG resource ID
   parent_id = module.resource_group.resource_id
