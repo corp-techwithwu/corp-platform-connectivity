@@ -20,3 +20,12 @@ hub_vpn_configs = {
     }
   }
 }
+
+hub_dns_resolver_configs = {
+  primary = {
+    enabled = true
+    # Optional: pin a static IP inside 10.0.3.0/28 (first usable host IP in Azure is .4)
+    inbound_private_ip_allocation_method = "Static"
+    inbound_private_ip_address           = "10.0.3.4"
+  }
+}

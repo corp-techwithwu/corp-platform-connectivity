@@ -84,3 +84,15 @@ variable "hub_vpn_configs" {
   default   = {}
   sensitive = true
 }
+
+variable "hub_dns_resolver_configs" {
+  description = "Map of Azure DNS Private Resolver configurations keyed by Hub VNet key (e.g., primary)."
+  type = map(object({
+    enabled                              = optional(bool, false)
+    name                                 = optional(string)
+    inbound_endpoint_name                = optional(string, "in-ep-default")
+    inbound_private_ip_allocation_method = optional(string, "Dynamic")
+    inbound_private_ip_address           = optional(string)
+  }))
+  default = {}
+}

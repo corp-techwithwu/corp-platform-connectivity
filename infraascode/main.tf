@@ -85,3 +85,26 @@ module "vpn" {
 
   tags = local.common_tags
 }
+
+###############################################################################
+# DNS Private Resolver Submodule
+###############################################################################
+module "dns_resolver" {
+  for_each = toset([
+    for key, config in var.hub_dns_resolver_configs : key
+    if config.enabled
+  ])
+  source = "./modules/dns_resolver"
+
+  name                = coalesce(var.hub_dns_resolver_configs[each.key].name, "dnspr-${local.hub_vnets[each.key].name}")
+  location            = local.location
+  resource_group_name = module.resource_group.name
+  virtual_network_id  = module.hub_vnet[each.key].resource_id
+
+  inbound_endpoint_name                = var.hub_dns_resolver_configs[each.key].inbound_endpoint_name
+  inbound_subnet_id                    = module.hub_vnet[each.key].subnets["dns_inbound"].resource_id
+  inbound_private_ip_allocation_method = var.hub_dns_resolver_configs[each.key].inbound_private_ip_allocation_method
+  inbound_private_ip_address           = var.hub_dns_resolver_configs[each.key].inbound_private_ip_address
+
+  tags = local.common_tags
+}

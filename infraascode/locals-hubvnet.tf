@@ -14,6 +14,18 @@ locals {
           name             = "snet-shared-services"
           address_prefixes = ["10.0.2.0/24"]
         }
+        dns_inbound = {
+          name             = "snet-dns-inbound"
+          address_prefixes = ["10.0.3.0/28"]
+          delegations = [
+            {
+              name = "Microsoft.Network.dnsResolvers"
+              service_delegation = {
+                name = "Microsoft.Network/dnsResolvers"
+              }
+            }
+          ]
+        }
         gateway = {
           name             = "GatewaySubnet"
           address_prefixes = ["10.0.254.0/24"]
